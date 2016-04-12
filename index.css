@@ -1,0 +1,249 @@
+html {
+}
+
+head {
+
+}
+
+body {
+	margin: 0px;
+}
+
+/****************************
+/header content styles
+/***************************/
+
+header {
+	background-color: #727272;
+	height: 50px;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	color:#FFFFFF;
+	box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+	z-index:1;
+}
+
+#header_container{
+	background-color: #212121;
+	width: 70%;
+	min-width: 300px;
+	max-width: 1300px;
+	height: 50px;
+	margin: auto;
+}
+
+#menu_button, #logout_button {
+	float: left;
+	height: 50px;
+	padding: 15px 10px 15px 10px;
+	width: 25%;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+#menu_button {
+	text-align: left;
+}
+
+#logout_button {
+	text-align: right;
+}
+
+header h1 {
+	float: left;
+	height: 100%;
+	margin: 0px 0px 0px 0px;
+	padding: 4px 10px 0px 10px;
+	text-align: center;
+	width: 50%;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+/****************************
+/main content styles
+/***************************/
+
+main {
+	height: 100%;
+}
+
+/****************************
+/menu content styles
+/***************************/
+
+#menu {
+	display: none;
+
+}
+
+#username {
+
+}
+
+#settings {
+
+}
+
+#settings li {
+
+}
+
+/****************************
+/Iterators styles
+/***************************/
+
+#iterators {
+	margin: 0px auto 0px auto;
+	padding: 0px 0px 0px 0px;
+	list-style-type: none;
+	width: 70%;
+	min-width: 300;
+	background-color: #DDDDDD;
+	box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+	height: 100%;
+	max-width: 1300px;
+}
+
+#iterators li {
+	display: inline-block;
+	width: 100%;
+	min-height: 100px;
+	max-height: 500px;
+	height: 25%;
+	margin-top: 10px;
+}
+
+#iterators li:first-of-type{
+	margin-top: 60px;
+}
+
+.card {
+	width: 100%;
+	height: 100%;
+	display: block;
+	position: relative;
+}
+
+.i_menu_button {
+	height: 67px;
+	width: 67px;
+	border-radius: 50%;
+	background-color: #FFEB3B;
+	box-shadow: 0 3px 10px rgba(0,0,0,0.23),0 3px 10px rgba(0,0,0,0.16);	
+	position: absolute;
+	top: 50%;
+	left: -33.5px;
+	transform: translate(0,-50%);
+	float:left;
+}
+
+.i_menu_button:hover {
+	/*transform: scale(1.1);*/
+}
+
+.container {
+	height: 100%;
+	width: 100%;
+	border-radius: 5px;
+	background-color:#2196F3;
+}
+
+.i_button {
+	height: 100%;
+	float: left;
+	margin-left: 50px;
+	color: #FFFFFF;
+}
+
+/****************************
+/statistics modal styles
+/***************************/
+
+#statistics_modal {
+	display:none;
+
+}
+
+.modal {
+	background-color:#000000;
+	background-color:rgba(0,0,0,0.4);
+	height:100%;
+	left:0;
+	overflow: auto;
+	position: fixed;
+	top: 0;
+	width:100%;
+	z-index:2;
+}
+
+.modal_tile {
+	background-color: #FFFFFF;
+	border-radius: 5px;
+	margin: 35px auto 0 auto;
+	opacity:1;
+	position:relative;
+	width: 68%;
+	max-width: 1280px;
+	min-width: 280px;
+	padding: 20px;
+	z-index:3;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.close_modal_button {
+
+}
+
+.modal_loading {
+
+}
+
+.modal_cards {
+	padding:0px;
+	list-style-type: none;
+	min-height: 200px;
+	margin:0;
+}
+
+.modal_cards li {
+	display: inline-block;
+	margin:0 auto 10px auto;
+	background-color:blue;
+	/*width: 240px;
+	/*height: 388.3px;
+	height: 628.27px;*/
+	width: 615px;
+	height: 388.3px;
+}
+
+@media screen and (max-width: 1000px){
+	.modal_cards li {
+		width:240px;
+	}
+}
+
+/****************************
+/footer content styles
+/***************************/
+
+footer {
+
+}
+
+/****************************
+/animation styles
+/***************************/
+
+.hidden_left {
+
+}
+
+.hidden_modal {
+	display: none;
+}
