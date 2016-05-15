@@ -2,8 +2,10 @@
 <html>
 	<head>
 		<title>Sneezee</title>
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+		<link href='https://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="index.css">
-
 	</head>
 
 	<body>
@@ -27,7 +29,7 @@
 			<ol id="iterators">
 				<li>
 					<div class="card">
-						<div class="i_menu_button">details</div>
+						<div class="i_menu_button"><i class="material-icons md-36">menu</i></div>
 						<div class="container">
 							<div class="i_button"><span class="count">0</span> <span class="i_name">:name</span><span class="i_plural_option">(s)</span></div>
 						</div>
@@ -35,7 +37,7 @@
 				</li>
 				<li>
 					<div class="card">
-						<div class="i_menu_button">details</div>
+						<div class="i_menu_button"><i class="material-icons md-36">menu</i></div>
 						<div class="container">
 							<div class="i_button"><span class="count">0</span> <span class="i_name">:name</span><span class="i_plural_option">(s)</span></div>
 						</div>
@@ -43,7 +45,7 @@
 				</li>
 				<li>
 					<div class="card">
-						<div class="i_menu_button">details</div>
+						<div class="i_menu_button"><i class="material-icons md-36">menu</i></div>
 						<div class="container">
 							<div class="i_button"><span class="count">0</span> <span class="i_name">:name</span><span class="i_plural_option">(s)</span></div>
 						</div>
@@ -53,13 +55,23 @@
 
 			<div id="statistics_modal" class="modal">
 				<div class="modal_tile">
-					<div class="close_modal_button"></div>
-					<div class="modal_loading"></div>
-					<ul class="modal_cards">
-						<li></li>
-						<li></li>
-						<li></li>
-					</ul>
+					<div class="modal_header">:iterator_name
+						<div class="close_modal_button"><i class="material-icons md-36 md-light">close</i></div>
+					</div>
+					<div class="modal_content">
+						<ul class="modal_cards">
+							<li><div class="card_ratio_controller">
+								<div class="card_content"></div>
+							</div></li>
+							<li><div class="card_ratio_controller">
+								<div class="card_content"></div>
+							</div></li>
+							<li><div class="card_ratio_controller">
+								<div class="card_content"></div>
+							</div></li>
+						</ul>
+						<div class="modal_loading"></div>
+					</div>
 				</div>
 			</div>
 

@@ -1,4 +1,5 @@
 html {
+	font-family:sans-serif;
 }
 
 head {
@@ -68,6 +69,7 @@ header h1 {
 /***************************/
 
 main {
+	font-family: 'Titillium Web';
 	height: 100%;
 }
 
@@ -135,14 +137,24 @@ main {
 	background-color: #FFEB3B;
 	box-shadow: 0 3px 10px rgba(0,0,0,0.23),0 3px 10px rgba(0,0,0,0.16);	
 	position: absolute;
+	top: 16.5px;
+	left: -33.5px;
+	/*
 	top: 50%;
 	left: -33.5px;
 	transform: translate(0,-50%);
+	*/
 	float:left;
+	text-align:center;
 }
 
 .i_menu_button:hover {
-	/*transform: scale(1.1);*/
+	transform: scale(1.05);
+	cursor: pointer;
+}
+
+.i_menu_button i {
+	margin: 22%;
 }
 
 .container {
@@ -164,8 +176,8 @@ main {
 /***************************/
 
 #statistics_modal {
-	display:none;
-
+	display: none;
+	transition: visibility .5s;
 }
 
 .modal {
@@ -189,14 +201,57 @@ main {
 	width: 68%;
 	max-width: 1280px;
 	min-width: 280px;
-	padding: 20px;
 	z-index:3;
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
 }
 
+.modal_header {
+	display: inline-block;
+	height: 60px;
+	width: 100%;
+	padding: 10px 20px 0px 20px;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  font-size: 36px;
+  vertical-align: middle;
+}
+
 .close_modal_button {
+	position: absolute;
+	right: -90px;
+	top:10px;
+	height: 67px;
+	width: 67px;
+	background-color: #f44336;
+	border-radius:50%;
+	-webkit-transition: right .5x;
+					transition: right .5s;
+}
+
+.close_modal_button:hover {
+	transform: scale(1.05);
+	cursor: pointer;
+}
+
+.close_modal_button i {
+	margin: 22%;
+}
+
+
+@media screen and (max-width: 720px){
+	.close_modal_button{
+		right:-33.5;
+	}
+}
+
+.modal_content {
+	padding: 20px;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
 
 }
 
@@ -207,24 +262,46 @@ main {
 .modal_cards {
 	padding:0px;
 	list-style-type: none;
-	min-height: 200px;
+	min-height: 100px;
 	margin:0;
+	overflow: hidden;
 }
 
 .modal_cards li {
-	display: inline-block;
-	margin:0 auto 10px auto;
-	background-color:blue;
+	display: block;
+	float: left;
+	padding: 0 5px 10px 5px;
 	/*width: 240px;
 	/*height: 388.3px;
-	height: 628.27px;*/
+	height: 628.27px;
 	width: 615px;
 	height: 388.3px;
+	*/
+	width: 50%;
+	min-height: 50px;  
+	-webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.card_ratio_controller {
+	width:100%;
+	padding-bottom: 62%;
+	position: relative;
+	z-index:4;
+}
+
+.card_content {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+  border-radius: 5px;
+  background-color: #222222;
 }
 
 @media screen and (max-width: 1000px){
 	.modal_cards li {
-		width:240px;
+		width: 100%;
 	}
 }
 
@@ -240,10 +317,22 @@ footer {
 /animation styles
 /***************************/
 
-.hidden_left {
 
-}
+/****************************
+/icon styles
+/***************************/
 
-.hidden_modal {
-	display: none;
-}
+/* Rules for sizing the icon. */
+
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }

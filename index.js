@@ -1,9 +1,24 @@
-$(".i_menu_button").click(function(){
-	$("#statistics_modal").show();
+$(document).ready(function(){
+	init();
+})
 
-});
+var modal = $("#statistics_modal");
 
-$("#statistics_modal").click(function(){
-	$("#statistics_modal").hide();
+function init(){
 
-});
+	$(".i_menu_button").click(function(){
+		modal.show();
+	});
+
+	modal.click(function(){
+		modal.hide();
+	}).children().click(function(e) {
+		return false;
+	});
+
+	$(".close_modal_button").click(function(){
+		modal.hide();
+	});
+
+}
+
