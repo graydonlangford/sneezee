@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,13 @@
   },
   "homepage": "https://github.com/graydonlangford/sneezee#readme",
   "dependencies": {
-    "express": "^4.13.4"
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4",
+    "jade": "^1.11.0",
+    "mongodb": "^2.1.21",
+    "mongoose": "^4.4.19"
+  },
+  "devDependencies": {
+    "nodemon": "^1.9.2"
   }
 }
