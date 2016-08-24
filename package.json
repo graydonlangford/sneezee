@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js"
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -18,13 +18,12 @@
   },
   "homepage": "https://github.com/graydonlangford/sneezee#readme",
   "dependencies": {
-    "body-parser": "^1.15.1",
-    "express": "^4.13.4",
-    "jade": "^1.11.0",
-    "mongodb": "^2.1.21",
-    "mongoose": "^4.4.19"
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "sequelize": "^3.24.1",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "nodemon": "^1.9.2"
+    "nodemon": "^1.10.2"
   }
 }
