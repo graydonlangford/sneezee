@@ -14,6 +14,13 @@ var PORT = process.env.PORT || 3000
 
 app.use(bodyParser.json())
 
+var validParams = {
+  entries: ['timestamp', 'geostamp', 'metaValue'],
+  iterators: ['singularName', 'pluralName', 'color']//,
+  // metas: [],
+  // metaValues: []
+}
+
 
 //===================================================\\
 //=== USER ROUTES ===================================\\
