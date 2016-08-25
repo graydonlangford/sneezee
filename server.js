@@ -21,6 +21,36 @@ var validParams = {
   // metaValues: []
 }
 
+var data = {
+  iterators: [
+    {
+      id: 1,
+      createdAt: 'timestamp',
+      updatedAt: 'timestmap',
+      userId: 1,
+      singularName: 'iterator',
+      pluralName: 'iterators',
+      color: '#111111'
+    }
+  ],
+  nextIteratorId: 2,
+  entries: [
+    {
+      id: 1,
+      createdAt: 'timestamp',
+      updatedAt: 'timestamp',
+      iteratorId: 1,
+      timestamp: 'timestamp',
+      geoStamp: 'geostamp',
+      metaValue: 'value'
+    }
+  ],
+  nextEntryId: 2
+}
+
+app.get('/', function (req, res) {
+  res.status(200).send('welcome to API root')
+})
 
 //===================================================\\
 //=== USER ROUTES ===================================\\
@@ -33,27 +63,50 @@ var validParams = {
 //=== ITERATOR ROUTES ===============================\\
 //===================================================\\
 
-app.post('/iterators', function () {
-  // create an iterator
+// CREATE Iterator
+app.post('/iterators', function (req, res) {
+  //ensure required params are included??
+
+  //remove unnessecary params
+  var body = _.pick(req.body, validParams.iterators)
+
+  //create iterator
+  //db.iterators.create().then().then().etc
+  var iteratorItem = {
+    id: data.nextIteratorId,
+    createdAt: new Date(),
+    updatedAt: null,
+    userId: 1,
+    singularName: body.singularName,
+    pluralName: body.pluralName,
+    color: body.color
+  }
+
+  data.iterators.push(iteratorItem)
+  data.nextIteratorId++
+
+  res.json(iteratorItem)
 })
 
-app.get('/iterators', function () {
+app.get('/iterators', function (req, res) {
   // get all iterators for a user
   // query iterators
+
+  res.json(data.iterators)
 })
 
-app.get('/iterators/:iteratorId', function () {
+app.get('/iterators/:iteratorId', function (req, res) {
   // get iterator by ID
 })
 
 // sub to socket.io stream
 
-app.put('/iterators/:iteratorId', function () {
+app.put('/iterators/:iteratorId', function (req, res) {
   // update an iterator
 })
 
-app.delete('/iterators/:iteratorId', function () {
-  // delete an iteraotr
+app.delete('/iterators/:iteratorId', function (req, res) {
+  // delete an iterator
 })
 
 //===================================================\\
@@ -67,25 +120,30 @@ app.delete('/iterators/:iteratorId', function () {
 //=== ENTRY ROUTES ==================================\\
 //===================================================\\
 
-app.post('/iterators/:iteratorId/entries', function () {
+app.post('/iterators/:iteratorId/entries', function (req, res) {
   // log an entry
 })
 
-app.get('/iterators/:iteratorId/entries', function () {
+app.get('/iterators/:iteratorId/entries', function (req, res) {
   // get all entries for this iterator
   // query entries for this iterator
 })
 
-app.get('/iterators/:iteratorId/entries/:entryId', function () {
+app.get('/iterators/:iteratorId/entries/:entryId', function (req, res) {
   // get a specific entry 
-}
+})
 
-app.put('/iterators/:iteratorId/entries/:entryId', function () {
+app.put('/iterators/:iteratorId/entries/:entryId', function (req, res) {
   // update a specific entry
 })
 
-app.delete('/iterators/:iteratorId/entries/:entryId', function () {
+app.delete('/iterators/:iteratorId/entries/:entryId', function (req, res) {
 
 })
+
+app.listen(PORT, function () {
+  console.log('Express listening on port ' + PORT)
+})
+
 
 
