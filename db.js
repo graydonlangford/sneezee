@@ -15,17 +15,19 @@ if (env === 'production') {
 
 var db = {}
 
+db.user = sequelize.import(__dirname + '/models/user.js')
 db.iterator = sequelize.import(__dirname + '/models/iterator.js')
-db.entry = sequelize.import(__dirname + '/models/entries.js')
-// db.user = sequelize.import(__dirname + '/models/user.js')
-// db.token = sequelize.import(__dirname + '/models/token.js')
+db.entry = sequelize.import(__dirname + '/models/entry.js')
+db.token = sequelize.import(__dirname + '/models/token.js')
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 
-// db.todo.belongsTo(db.user)
-// db.user.hasMany(db.todo)
+// assosciate iterators to user
+db.user.hasMany(db.iterator)
+db.iterator.belongsTo(db.user)
 
-db.entry.belongsTo(db.iterator)
+// assosciate entries to iterator
 db.iterator.hasMany(db.entry)
+db.entry.belongsTo(db.iterator)
 
 module.exports = db

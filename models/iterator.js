@@ -4,21 +4,21 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        [1, 250]
+        len: [1, 250]
       }
     },
     pluralName: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        [1, 250]
+        len: [1, 250]
       }
     },
     color: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        [1, 250]
+        len: [1, 250]
       }
     }
   })

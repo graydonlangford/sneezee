@@ -5,58 +5,61 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 var _ = require('underscore')
-// var db = require('./db.js')
-// var bcrypt = require('bcryptjs')
-// var middleware = require('./middleware.js')(db)
+var db = require('./db.js')
+var bcrypt = require('bcryptjs')
+var middleware = require('./middleware.js')(db)
 
 var app = express()
 var PORT = process.env.PORT || 3000
 
-app.use(bodyParser.json())
-
 var validParams = {
-  entries: ['timestamp', 'geostamp', 'metaValue'],
-  iterators: ['singularName', 'pluralName', 'color']//,
+  user: ['email', 'password'],
+  entry: ['timestamp', 'geostamp', 'metaValue'],
+  iterator: ['singularName', 'pluralName', 'color']//,
   // metas: [],
   // metaValues: []
 }
 
-var data = {
-  iterators: [
-    {
-      id: 1,
-      createdAt: 'timestamp',
-      updatedAt: 'timestmap',
-      userId: 1,
-      singularName: 'iterator',
-      pluralName: 'iterators',
-      color: '#111111'
-    }
-  ],
-  nextIteratorId: 2,
-  entries: [
-    {
-      id: 1,
-      createdAt: 'timestamp',
-      updatedAt: 'timestamp',
-      iteratorId: 1,
-      timestamp: 'timestamp',
-      geoStamp: 'geostamp',
-      metaValue: 'value'
-    }
-  ],
-  nextEntryId: 2
-}
+app.use(bodyParser.json())
+
+//===================================================\\
+//=== MASTER ROUTE ==================================\\
+//===================================================\\
 
 app.get('/', function (req, res) {
-  res.status(200).send('welcome to API root')
-})
+  res.status(200).send('This is the API root. No endpoints exist here. Please use /users, /iterators, or /entries to proceed')
+}) // MODIFY THIS TO REQUIRE LOGIN AND PROVIDE ALL DATA NEEDED TO INITIALIZE WEBAPP IN ONE CALL
+
 
 //===================================================\\
 //=== USER ROUTES ===================================\\
 //===================================================\\
 
-// user routes
+// CREATE user
+app.post('/users', function (req, res) {
+  var body = _.pick(req.body, validParams.user)
+
+  db.user.create(body).then(function (user) {
+    res.json(user.toPublicJSON())
+  }, function (err) {
+    res.status(400).json(err)
+  })
+})
+
+// LOGIN
+app.post('/users/login', function (req, res) {
+  // login user by creating token
+})
+
+// LOGOUT
+app.delete('/users/login', middleware.requireAuthentication, function (req, res) {
+  // log out user by deleting token
+})
+
+// DELETE user
+app.delete('/users', middleware.requireAuthentication, function (req, res) {
+  // delete a user's account, iterators, entries, and metas
+})
 
 
 //===================================================\\
@@ -64,53 +67,30 @@ app.get('/', function (req, res) {
 //===================================================\\
 
 // CREATE Iterator
-app.post('/iterators', function (req, res) {
-  //ensure required params are included??
-
-  //remove unnessecary params
-  var body = _.pick(req.body, validParams.iterators)
-
-  //create iterator
-  //db.iterators.create().then().then().etc
-  var iteratorItem = {
-    id: data.nextIteratorId,
-    createdAt: new Date(),
-    updatedAt: null,
-    userId: 1,
-    singularName: body.singularName,
-    pluralName: body.pluralName,
-    color: body.color
-  }
-
-  data.iterators.push(iteratorItem)
-  data.nextIteratorId++
-
-  res.json(iteratorItem)
+app.post('/iterators', middleware.requireAuthentication, function (req, res) {
+  // create iterator for user
 })
 
-app.get('/iterators', function (req, res) {
-  // get all iterators for a user
-  // query iterators
-
-  res.json(data.iterators)
+app.get('/iterators', middleware.requireAuthentication, function (req, res) {
+  // get all iterators for user
 })
 
-app.get('/iterators/:iteratorId', function (req, res) {
+app.get('/iterators/:iteratorId', middleware.requireAuthentication, function (req, res) {
   // get iterator by ID
 })
 
 // sub to socket.io stream
 
-app.put('/iterators/:iteratorId', function (req, res) {
+app.put('/iterators/:iteratorId', middleware.requireAuthentication, function (req, res) {
   // update an iterator
 })
 
-app.delete('/iterators/:iteratorId', function (req, res) {
+app.delete('/iterators/:iteratorId', middleware.requireAuthentication, function (req, res) {
   // delete an iterator
 })
 
 //===================================================\\
-//=== META ROUTES ===============================\\
+//=== META ROUTES ===================================\\
 //===================================================\\
 
 // meta routes
@@ -120,30 +100,35 @@ app.delete('/iterators/:iteratorId', function (req, res) {
 //=== ENTRY ROUTES ==================================\\
 //===================================================\\
 
-app.post('/iterators/:iteratorId/entries', function (req, res) {
+app.post('/iterators/:iteratorId/entries', middleware.requireAuthentication, function (req, res) {
   // log an entry
 })
 
-app.get('/iterators/:iteratorId/entries', function (req, res) {
+app.get('/iterators/:iteratorId/entries', middleware.requireAuthentication, function (req, res) {
   // get all entries for this iterator
   // query entries for this iterator
 })
 
-app.get('/iterators/:iteratorId/entries/:entryId', function (req, res) {
+app.get('/iterators/:iteratorId/entries/:entryId', middleware.requireAuthentication, function (req, res) {
   // get a specific entry 
 })
 
-app.put('/iterators/:iteratorId/entries/:entryId', function (req, res) {
+app.put('/iterators/:iteratorId/entries/:entryId', middleware.requireAuthentication, function (req, res) {
   // update a specific entry
 })
 
-app.delete('/iterators/:iteratorId/entries/:entryId', function (req, res) {
-
-})
-
-app.listen(PORT, function () {
-  console.log('Express listening on port ' + PORT)
+app.delete('/iterators/:iteratorId/entries/:entryId', middleware.requireAuthentication, function (req, res) {
+  // delete a specific entry
 })
 
 
+//===================================================\\
+//=== START SERVER ==================================\\
+//===================================================\\
 
+// start sequelize and listen on port
+db.sequelize.sync({force: true}).then(function () {
+  app.listen(PORT, function () {
+    console.log('Express listening on port ' + PORT)
+  })
+})
