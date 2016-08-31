@@ -15,7 +15,7 @@ var PORT = process.env.PORT || 3000
 var validParams = {
   user: ['email', 'password'],
   entry: ['timestamp', 'geostamp', 'metaValue'],
-  iterator: ['singularName', 'pluralName', 'color']//,
+  iterator: ['singularName', 'pluralName', 'color'/*, 'createdAt', 'updatedAt'*/]//,
   // metas: [],
   // metaValues: []
 }
@@ -48,18 +48,38 @@ app.post('/users', function (req, res) {
 
 // LOGIN
 app.post('/users/login', function (req, res) {
-  // login user by creating token
+  var body = _.pick(req.body, validParams.user) //remove fields that aren't needed
+  var userInstance // create var for later storing logged in user
+
+  db.user.authenticate(body).then(function (user) {
+    var token = user.generateToken('authentication')
+    userInstance = user
+
+    return db.token.create({
+      token: token
+    })
+
+  }).then(function (tokenInstance) {
+    res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON)
+  }).catch(function (err) {
+    console.log(err)
+    res.status(401).send()
+  })
 })
 
 // LOGOUT
 app.delete('/users/login', middleware.requireAuthentication, function (req, res) {
-  // log out user by deleting token
+  req.token.destroy().then(function () {
+    res.status(204).send()
+  }).catch(function() {
+    res.status(500).send()
+  })
 })
 
 // DELETE user
-app.delete('/users', middleware.requireAuthentication, function (req, res) {
-  // delete a user's account, iterators, entries, and metas
-})
+// app.delete('/users', middleware.requireAuthentication, function (req, res) {
+//   // delete a user's account, iterators, entries, and metas
+// })
 
 
 //===================================================\\
@@ -68,11 +88,42 @@ app.delete('/users', middleware.requireAuthentication, function (req, res) {
 
 // CREATE Iterator
 app.post('/iterators', middleware.requireAuthentication, function (req, res) {
-  // create iterator for user
+  var body = _.pick(req.body, validParams.iterator)
+
+  db.iterator.create(body).then(function (iterator) {
+    req.user.addIterator(iterator).then(function () {
+      return iterator.reload()
+    }).then(function (iterator) {
+      res.json(iterator.toJSON())
+    })
+  }, function (err) {
+    res.status(400).json(err)
+  })
 })
 
 app.get('/iterators', middleware.requireAuthentication, function (req, res) {
-  // get all iterators for user
+  var query = _.pick(req.query, validParams.iterator)
+
+  var where = {}
+
+  //add ability to aproximate match on names and colors
+  if (query.hasOwnProperty('singularName')) {where.singularName = query.singularName}
+  if (query.hasOwnProperty('pluralName')) {where.pluralName = query.pluralName}
+  if (query.hasOwnProperty('color')) {where.color = query.color}
+
+  where.userId = req.user.get('id')
+  
+  db.iterator.findAll({where: where}).then(function (iterators) {
+    iterators.forEach(function (iterator) {
+      iterator = iterator.toJSON()
+      delete iterator.userId
+      console.log(iterator)
+    })
+    res.json(iterators)
+  }, function (err) {
+    res.status(500).send()
+  })
+
 })
 
 app.get('/iterators/:iteratorId', middleware.requireAuthentication, function (req, res) {
@@ -127,7 +178,7 @@ app.delete('/iterators/:iteratorId/entries/:entryId', middleware.requireAuthenti
 //===================================================\\
 
 // start sequelize and listen on port
-db.sequelize.sync({force: true}).then(function () {
+db.sequelize.sync().then(function () {
   app.listen(PORT, function () {
     console.log('Express listening on port ' + PORT)
   })

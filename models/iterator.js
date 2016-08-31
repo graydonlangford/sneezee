@@ -1,5 +1,7 @@
+var _ = require('underscore')
+
 module.exports = function (sequelize, DataTypes) {
-  return sequelize.define('iterator', {
+  var iterator = sequelize.define('iterator', {
     singularName: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -22,4 +24,6 @@ module.exports = function (sequelize, DataTypes) {
       }
     }
   })
+
+  return iterator
 }
