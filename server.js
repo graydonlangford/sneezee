@@ -22,6 +22,16 @@ var validParams = {
 
 app.use(bodyParser.json())
 
+prepareAttributes = function (object, attributes) {
+  var output = {}
+  attributes.forEach(function (attribute) {
+    if (object.hasOwnProperty(attribute)) {attributes[attribute] = attribute}
+  })
+
+  // if attributes is empty, then return a 400 or something
+  return output
+}
+
 //===================================================\\
 //=== MASTER ROUTE ==================================\\
 //===================================================\\
@@ -99,17 +109,17 @@ app.post('/iterators', middleware.requireAuthentication, function (req, res) {
   }, function (err) {
     res.status(400).json(err)
   })
-})
+}) //returns userid, which is bad
 
 app.get('/iterators', middleware.requireAuthentication, function (req, res) {
   var query = _.pick(req.query, validParams.iterator)
 
-  var where = {}
+  var where = prepareAttributes(query, validParams.iterator)
 
   //add ability to aproximate match on names and colors
-  if (query.hasOwnProperty('singularName')) {where.singularName = query.singularName}
-  if (query.hasOwnProperty('pluralName')) {where.pluralName = query.pluralName}
-  if (query.hasOwnProperty('color')) {where.color = query.color}
+  // if (query.hasOwnProperty('singularName')) {where.singularName = query.singularName}
+  // if (query.hasOwnProperty('pluralName')) {where.pluralName = query.pluralName}
+  // if (query.hasOwnProperty('color')) {where.color = query.color}
 
   where.userId = req.user.get('id')
   
@@ -127,17 +137,79 @@ app.get('/iterators', middleware.requireAuthentication, function (req, res) {
 })
 
 app.get('/iterators/:iteratorId', middleware.requireAuthentication, function (req, res) {
-  // get iterator by ID
+  var iteratorId = parseInt(req.params.iteratorId, 10)
+
+  db.iterator.findOne({
+    where: {
+      userId: req.user.get('id'),
+      id: iteratorId
+    }
+  }).then(function (iterator) {
+    if (!!iterator) {
+      res.json(iterator.toJSON())
+    } else {
+      res.status(404).send()
+    }
+  }, function (err) {
+    res.status(500).send()
+  })
 })
 
+
 // sub to socket.io stream
+//app.get('/users/stream' or '/iterators/:id/stream')
+
 
 app.put('/iterators/:iteratorId', middleware.requireAuthentication, function (req, res) {
-  // update an iterator
+  var iteratorId = parseInt(req.params.iteratorId, 10)
+  var body = _.pick(req.body, validParams.iterator)
+  var attributes = prepareAttributes(body, validParams.iterator)
+
+  db.iterator.findOne({
+    where: {
+      userId: req.user.get('id'),
+      id: iteratorId
+    }
+  }).then(function (iterator) {
+    if (iterator) {
+      iterator.update(attributes).then(function (iterator) {
+        res.json(iterator.toJSON())
+      }, function (err) {
+        res.status(400).json(err)
+      })
+    } else {
+      res.status(404).json(err)
+    }
+  }, function (err) {
+    res.status(500).send()
+  })
+
 })
 
 app.delete('/iterators/:iteratorId', middleware.requireAuthentication, function (req, res) {
-  // delete an iterator
+  var iteratorId = parseInt(req.params.iteratorId, 10)
+
+  db.iterator.findOne({
+    where: {
+      userId: req.user.get('id'),
+      id: iteratorId
+    }
+  }).then(function (iterator) {
+    if (iterator) {
+      iterator.destroy().then(function () {
+        res.status(204).send()
+      }).catch(function () {
+        console.log('fail on destroy')
+        res.status(500).send()
+      })
+    } else {
+      console.log('fail on if (iterator)')
+      res.status(404).send()
+    }
+  }, function (err) {
+    console.log('fail on findOne()')
+    res.status(500).send()
+  })
 })
 
 //===================================================\\
