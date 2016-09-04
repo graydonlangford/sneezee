@@ -48,12 +48,32 @@ app.post('/users', function (req, res) {
 
 // LOGIN
 app.post('/users/login', function (req, res) {
-  // login user by creating token
+  var body = _.pick(req.body, validParams.user)
+  var userInstance
+
+  db.user.authenticate(body).then(function (user) {
+    var token = user.generateToken('authentication')
+    userInstance = user
+
+    return db.token.create({
+      token: token
+    })
+
+  }).then(function (tokenInstance) {
+    res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON)
+  }).catch(function (err) {
+    console.log(err)
+    res.status(401).send()
+  })
 })
 
 // LOGOUT
 app.delete('/users/login', middleware.requireAuthentication, function (req, res) {
-  // log out user by deleting token
+  req.token.destroy().then(function () {
+    res.status(204).send()
+  }).catch(function() {
+    res.status(500).send()
+  })
 })
 
 // DELETE user
