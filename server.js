@@ -12,7 +12,7 @@ var middleware = require('./middleware.js')(db)
 var app = express()
 var PORT = process.env.PORT || 3000
 
-var validParams = {
+var validInputs = {
   user: ['email', 'password'],
   entry: ['timestamp', 'geostamp', 'metaValue'],
   iterator: ['singularName', 'pluralName', 'color'/*, 'createdAt', 'updatedAt'*/]//,
@@ -20,17 +20,12 @@ var validParams = {
   // metaValues: []
 }
 
+var validQueries = {
+  entry: ['timestamp', 'geostamp', 'metaValue'],
+  iterator: ['singularName', 'pluralName', 'color']
+}
+
 app.use(bodyParser.json())
-
-// prepareAttributes = function (object, attributes) {
-//   var output = {}
-//   attributes.forEach(function (attribute) {
-//     if (object.hasOwnProperty(attribute)) {output[attribute] = object[attribute]}
-//   })
-
-//   // if attributes is empty, then return a 400 or something
-//   return output
-// }
 
 //===================================================\\
 //=== MASTER ROUTE ==================================\\
@@ -47,7 +42,7 @@ app.get('/', function (req, res) {
 
 // CREATE user
 app.post('/users', function (req, res) {
-  var body = _.pick(req.body, validParams.user)
+  var body = _.pick(req.body, validInputs.user)
 
   db.user.create(body).then(function (user) {
     res.json(user.toPublicJSON())
@@ -58,7 +53,7 @@ app.post('/users', function (req, res) {
 
 // LOGIN
 app.post('/users/login', function (req, res) {
-  var body = _.pick(req.body, validParams.user) //remove fields that aren't needed
+  var body = _.pick(req.body, validInputs.user) //remove fields that aren't needed
   var userInstance // create var for later storing logged in user
 
   db.user.authenticate(body).then(function (user) {
@@ -97,7 +92,7 @@ app.delete('/users/login', middleware.requireAuthentication, function (req, res)
 
 // CREATE Iterator
 app.post('/iterators', middleware.requireAuthentication, function (req, res) {
-  var body = _.pick(req.body, validParams.iterator)
+  var body = _.pick(req.body, validInputs.iterator)
 
   db.iterator.create(body).then(function (iterator) {
     req.user.addIterator(iterator).then(function () {
@@ -114,12 +109,11 @@ app.post('/iterators', middleware.requireAuthentication, function (req, res) {
 
 
 app.get('/iterators', middleware.requireAuthentication, function (req, res) {
-  var query = _.pick(req.query, validParams.iterator)
+  var query = _.pick(req.query, validQueries.iterator)
 
-  //add ability to aproximate match on names and colors
-  // if (query.hasOwnProperty('singularName')) {where.singularName = query.singularName}
-  // if (query.hasOwnProperty('pluralName')) {where.pluralName = query.pluralName}
-  // if (query.hasOwnProperty('color')) {where.color = query.color}
+  // last created iterator
+  // last updated iterator
+  // iterator by createdAt and updatedAt date range
 
   query.userId = req.user.get('id')
   
@@ -162,7 +156,7 @@ app.get('/iterators/:iteratorId', middleware.requireAuthentication, function (re
 
 app.put('/iterators/:iteratorId', middleware.requireAuthentication, function (req, res) {
   var iteratorId = parseInt(req.params.iteratorId, 10)
-  var body = _.pick(req.body, validParams.iterator)
+  var body = _.pick(req.body, validInputs.iterator)
 
   db.iterator.findOne({
     where: {
@@ -189,7 +183,6 @@ app.put('/iterators/:iteratorId', middleware.requireAuthentication, function (re
 })
 
 
-// NEEDS TO DELETE ALL ENTRIES ALSO
 app.delete('/iterators/:iteratorId', middleware.requireAuthentication, function (req, res) {
   var iteratorId = parseInt(req.params.iteratorId, 10)
 
@@ -233,8 +226,8 @@ app.delete('/iterators/:iteratorId', middleware.requireAuthentication, function 
 // MOST ENTRY ROUTES SHOULD START LIKE THIS
 // var iteratorId = parseInt(req.params.iteratorId, 10)
 // var entryId = parseInt(req.params.entryId, 10)
-// var body = _.pick(req.body, validParams.entry)
-// var query = _.pick(req.query, validParams.entry)
+// var body = _.pick(req.body, validInputs.entry)
+// var query = _.pick(req.query, validQueries.entry)
 
 // db.iterator.findOne({
 //   where: {
@@ -254,7 +247,7 @@ app.delete('/iterators/:iteratorId', middleware.requireAuthentication, function 
 app.post('/iterators/:iteratorId/entries', middleware.requireAuthentication, function (req, res) {
   var iteratorId = parseInt(req.params.iteratorId, 10)
   var entryId = parseInt(req.params.entryId, 10)
-  var body = _.pick(req.body, validParams.entry)
+  var body = _.pick(req.body, validInputs.entry)
 
   db.iterator.findOne({
     where: {
@@ -287,7 +280,7 @@ app.post('/iterators/:iteratorId/entries', middleware.requireAuthentication, fun
 app.get('/iterators/:iteratorId/entries', middleware.requireAuthentication, function (req, res) {
   var iteratorId = parseInt(req.params.iteratorId, 10)
   var entryId = parseInt(req.params.entryId, 10)
-  var query = _.pick(req.query, validParams.entry)
+  var query = _.pick(req.query, validQueries.entry)
 
   db.iterator.findOne({
     where: {
@@ -349,7 +342,7 @@ app.get('/iterators/:iteratorId/entries/:entryId', middleware.requireAuthenticat
 app.put('/iterators/:iteratorId/entries/:entryId', middleware.requireAuthentication, function (req, res) {
   var iteratorId = parseInt(req.params.iteratorId, 10)
   var entryId = parseInt(req.params.entryId, 10)
-  var body = _.pick(req.body, validParams.entry)
+  var body = _.pick(req.body, validInputs.entry)
 
   db.iterator.findOne({
     where: {
